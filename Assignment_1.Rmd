@@ -1,0 +1,91 @@
+---
+title: "607_Assignment_1"
+author: "NweOoMon(Nina)"
+date: "2024-09-02"
+output: html_document
+---
+## Introduction
+
+The following article was chosen from [fivethirtyeight.com](https://projects.fivethirtyeight.com/).
+
+[According To Super Bowl Ads, Americans Love America, Animals And Sex](https://projects.fivethirtyeight.com/super-bowl-ads/).
+
+The data contains a list of ads from the 10 brands that had the most advertisements in Super Bowls from 2000 to 2020, according to data from superbowl-ads.com, with matching videos found on YouTube.
+
+```{r setup}
+# Install dplyr package to create new variables 
+#install.packages("dplyr")
+
+# Load dplyr package
+library(dplyr)
+
+# Load the dataset from GitHub
+url <- "https://raw.githubusercontent.com/Nweoomon/fivethirtyeight_superbowlads/main/superbowl-ads.csv"
+data <- read.csv(url)
+
+# Load the necessary library
+library(knitr)
+
+# Display the first few rows of the dataset in a nicely formatted table
+kable(head(data), caption = "Sample of Super Bowl Ads Data")
+```
+## Variables in the dataset
+
+FiveThirtyEight staffers then came up with seven defining characteristics of a Super Bowl ad, watched every video and evaluated each according to the taxonomy in the table below.
+
+year	
+Year the spot aired, according to superbowl-ads.com
+
+brand	
+Brand of advertiser, grouped to account for spelling and punctuation differences, and sub-brands (e.g. Coca-Cola Mini is grouped into Coca-Cola)
+
+superbowl_ads_dot_com_url	
+Link to superbowl-ads.com entry for this ad
+
+youtube_url
+Link to YouTube video matched to this ad. If this field is blank, this means we weren't able to find a YouTube video for this spot — so if you find one, please let us know!
+
+funny	
+Was it trying to be funny? Is the ad jokey, goofy, weird or silly? Funny commercials (or ones that are trying to be funny) are marked True. Anything serious or dramatic is marked False.
+
+show_product_quickly
+Did it show the product right away? Can you tell what is being advertised within the first 10 seconds of the commercial? If you can see the product or brand name on the screen, that counts.
+
+patriotic	Was it patriotic? 
+Did the commercial make a patriotic appeal, either clear or subtle, or include American imagery? Any glimpses of an American flag or the words "America" or "United States" counted, as did references to the armed forces, manufacturing and farming.
+
+celebrity	
+Did it feature a celebrity? If we saw a celebrity we recognized, we checked this one off.
+
+danger	
+Did it involve danger? Did we see any violence, threats of violence, injuries, fighting or guns? Any allusions to death or hokey injuries also counted here.
+
+animals	
+Did it include animals? Did an animal — either real or computer-generated — show up at any point in the ad? Even one-frame appearances counted.
+
+use_sex	
+Did it use sex to sell its product? We counted any subtle or overt suggestions of sex, sexuality, sex appeal or nudity.
+
+## Creating New Variables Based on Article Insights
+
+To better understand the themes and patterns in the Super Bowl ads dataset, new variables were created by combining two or more existing variables. These combinations were inspired by the themes discussed in the article, "According To Super Bowl Ads, Americans Love America, Animals And Sex."
+
+Using the mutate function from the dplyr package, the following new variables were generated:
+
+danger_not_funny: This variable identifies ads that are labeled as "dangerous" (danger == TRUE) but are not considered "funny" (funny == FALSE). The new variable helps us explore the prevalence of serious or dramatic ads that do not employ humor.
+
+patriotism_and_celebrity: This variable identifies advertisements that combine both patriotic elements (patriotic == TRUE) and the use of celebrities (celebrity == TRUE). This new variable allows us to analyze how frequently these two themes are used together, providing insights into whether ads that feature patriotic themes also tend to leverage celebrity endorsements, as discussed in the article.
+
+```{r}
+# Mutate to create the new variable
+data <- data %>%
+  mutate(
+    danger_not_funny = danger == TRUE & funny == FALSE,
+    patriotism_and_celebrity = patriotic == TRUE & celebrity == TRUE
+  )
+
+kable(head(data), caption = "Sample of Super Bowl Ads Data with new variables")
+```
+## Comment
+
+Further analysis could explore whether these combinations of themes have changed over time, how different brands utilize these strategies, and whether there is any correlation between these themes and the success metrics of the advertisements, such as viewer engagement or brand recall. Such insights could be valuable for understanding the evolving trends and strategies in Super Bowl advertising.
